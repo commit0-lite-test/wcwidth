@@ -115,7 +115,7 @@ def _bisearch(ucs: int, table: list[tuple[int, int]]) -> int:
 
 @lru_cache(maxsize=1000)
 def wcwidth(wc: str, unicode_version: str = "auto") -> int:
-    """Given one Unicode character, return its printable length on a terminal.
+    r"""Given one Unicode character, return its printable length on a terminal.
 
     Args:
     ----
@@ -132,7 +132,7 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
     -------
         The width, in cells, necessary to display the character of
         Unicode string character, ``wc``.  Returns 0 if the ``wc`` argument has
-        no printable effect on a terminal (such as NUL '\\0'), -1 if ``wc`` is
+        no printable effect on a terminal (such as NUL '\0'), -1 if ``wc`` is
         not printable, or has an indeterminate effect on the terminal, such as
         a control character.  Otherwise, the number of column positions the
         character occupies on a graphic terminal (1 or 2) is returned.
