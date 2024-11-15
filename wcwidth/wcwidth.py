@@ -1,12 +1,12 @@
-"""This is a python implementation of wcwidth() and wcswidth().
+"""Python implementation of wcwidth() and wcswidth().
 
 https://github.com/jquast/wcwidth
 
-from Markus Kuhn's C code, retrieved from:
+From Markus Kuhn's C code, retrieved from:
 
     http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 
-This is an implementation of wcwidth() and wcswidth() (defined in
+An implementation of wcwidth() and wcswidth() (defined in
 IEEE Std 1002.1-2001) for Unicode.
 
 http://www.opengroup.org/onlinepubs/007904975/functions/wcwidth.html
@@ -76,14 +76,16 @@ except ImportError:
 _PY3 = sys.version_info[0] >= 3
 
 
-def _bisearch(ucs, table):
+def _bisearch(ucs: int, table: list[tuple[int, int]]) -> int:
     """Auxiliary function for binary search in interval table.
 
-    :arg int ucs: Ordinal value of unicode character.
-    :arg list table: List of starting and ending ranges of ordinal values,
-        in form of ``[(start, end), ...]``.
-    :rtype: int
-    :returns: 1 if ordinal value ucs is found within lookup table, else 0.
+    Args:
+        ucs: Ordinal value of unicode character.
+        table: List of starting and ending ranges of ordinal values,
+            in form of ``[(start, end), ...]``.
+
+    Returns:
+        1 if ordinal value ucs is found within lookup table, else 0.
     """
     lbound = 0
     ubound = len(table) - 1
@@ -189,18 +191,20 @@ def wcswidth(pwcs, n=None, unicode_version="auto"):
 
 
 @lru_cache(maxsize=128)
-def _wcversion_value(ver_string):
+def _wcversion_value(ver_string: str) -> tuple[int, ...]:
     """Integer-mapped value of given dotted version string.
 
-    :param str ver_string: Unicode version string, of form ``n.n.n``.
-    :rtype: tuple(int)
-    :returns: tuple of digit tuples, ``tuple(int, [...])``.
+    Args:
+        ver_string: Unicode version string, of form ``n.n.n``.
+
+    Returns:
+        Tuple of digit tuples, ``tuple(int, [...])``.
     """
     return tuple(map(int, ver_string.split(".")))
 
 
 @lru_cache(maxsize=8)
-def _wcmatch_version(given_version):
+def _wcmatch_version(given_version: str) -> str:
     """Return nearest matching supported Unicode version level.
 
     If an exact match is not determined, the nearest lowest version level is
@@ -215,12 +219,14 @@ def _wcmatch_version(given_version):
     >>> _wcmatch_version('1')
     '4.1.0'
 
-    :param str given_version: given version for compare, may be ``auto``
-        (default), to select Unicode Version from Environment Variable,
-        ``UNICODE_VERSION``. If the environment variable is not set, then the
-        latest is used.
-    :rtype: str
-    :returns: unicode string, or non-unicode ``str`` type for python 2
+    Args:
+        given_version: Given version for compare, may be ``auto``
+            (default), to select Unicode Version from Environment Variable,
+            ``UNICODE_VERSION``. If the environment variable is not set, then the
+            latest is used.
+
+    Returns:
+        Unicode string, or non-unicode ``str`` type for python 2
         when given ``version`` is also type ``str``.
     """
     if given_version == "auto":
