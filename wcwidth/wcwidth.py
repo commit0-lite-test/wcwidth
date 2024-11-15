@@ -1,5 +1,4 @@
-"""
-This is a python implementation of wcwidth() and wcswidth().
+"""This is a python implementation of wcwidth() and wcswidth().
 
 https://github.com/jquast/wcwidth
 
@@ -60,6 +59,7 @@ http://www.unicode.org/unicode/reports/tr11/
 
 Latest version: http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
 """
+
 from __future__ import division
 import os
 import sys
@@ -68,15 +68,16 @@ from .table_vs16 import VS16_NARROW_TO_WIDE
 from .table_wide import WIDE_EASTASIAN
 from .table_zero import ZERO_WIDTH
 from .unicode_versions import list_versions
+
 try:
     from functools import lru_cache
 except ImportError:
     from backports.functools_lru_cache import lru_cache
 _PY3 = sys.version_info[0] >= 3
 
+
 def _bisearch(ucs, table):
-    """
-    Auxiliary function for binary search in interval table.
+    """Auxiliary function for binary search in interval table.
 
     :arg int ucs: Ordinal value of unicode character.
     :arg list table: List of starting and ending ranges of ordinal values,
@@ -101,10 +102,10 @@ def _bisearch(ucs, table):
 
     return 0
 
+
 @lru_cache(maxsize=1000)
-def wcwidth(wc, unicode_version='auto'):
-    """
-    Given one Unicode character, return its printable length on a terminal.
+def wcwidth(wc, unicode_version="auto"):
+    """Given one Unicode character, return its printable length on a terminal.
 
     :param str wc: A single Unicode character.
     :param str unicode_version: A Unicode version number, such as
@@ -153,9 +154,9 @@ def wcwidth(wc, unicode_version='auto'):
     # All other characters are considered single width
     return 1
 
-def wcswidth(pwcs, n=None, unicode_version='auto'):
-    """
-    Given a unicode string, return its printable length on a terminal.
+
+def wcswidth(pwcs, n=None, unicode_version="auto"):
+    """Given a unicode string, return its printable length on a terminal.
 
     :param str pwcs: Measure width of given unicode string.
     :param int n: When ``n`` is None (default), return the length of the entire
@@ -176,31 +177,31 @@ def wcswidth(pwcs, n=None, unicode_version='auto'):
     """
     if n is None:
         n = len(pwcs)
-    
+
     width = 0
     for char in pwcs[:n]:
         char_width = wcwidth(char, unicode_version)
         if char_width < 0:
             return -1
         width += char_width
-    
+
     return width
+
 
 @lru_cache(maxsize=128)
 def _wcversion_value(ver_string):
-    """
-    Integer-mapped value of given dotted version string.
+    """Integer-mapped value of given dotted version string.
 
     :param str ver_string: Unicode version string, of form ``n.n.n``.
     :rtype: tuple(int)
     :returns: tuple of digit tuples, ``tuple(int, [...])``.
     """
-    return tuple(map(int, ver_string.split('.')))
+    return tuple(map(int, ver_string.split(".")))
+
 
 @lru_cache(maxsize=8)
 def _wcmatch_version(given_version):
-    """
-    Return nearest matching supported Unicode version level.
+    """Return nearest matching supported Unicode version level.
 
     If an exact match is not determined, the nearest lowest version level is
     returned after a warning is emitted.  For example, given supported levels
@@ -222,21 +223,25 @@ def _wcmatch_version(given_version):
     :returns: unicode string, or non-unicode ``str`` type for python 2
         when given ``version`` is also type ``str``.
     """
-    if given_version == 'auto':
-        given_version = os.environ.get('UNICODE_VERSION', 'latest')
-    
-    if given_version == 'latest':
+    if given_version == "auto":
+        given_version = os.environ.get("UNICODE_VERSION", "latest")
+
+    if given_version == "latest":
         return list_versions()[-1]
-    
+
     supported_versions = list_versions()
     given_value = _wcversion_value(given_version)
-    
+
     for version in reversed(supported_versions):
         if _wcversion_value(version) <= given_value:
             if version != given_version:
-                warnings.warn(f"Unicode version {given_version} not found, using {version}")
+                warnings.warn(
+                    f"Unicode version {given_version} not found, using {version}"
+                )
             return version
-    
+
     # If no suitable version found, return the earliest supported version
-    warnings.warn(f"Unicode version {given_version} not found, using {supported_versions[0]}")
+    warnings.warn(
+        f"Unicode version {given_version} not found, using {supported_versions[0]}"
+    )
     return supported_versions[0]
