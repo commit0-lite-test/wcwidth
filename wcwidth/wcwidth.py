@@ -80,12 +80,15 @@ def _bisearch(ucs: int, table: list[tuple[int, int]]) -> int:
     """Auxiliary function for binary search in interval table.
 
     Args:
+    ----
         ucs: Ordinal value of unicode character.
         table: List of starting and ending ranges of ordinal values,
             in form of ``[(start, end), ...]``.
 
     Returns:
+    -------
         1 if ordinal value ucs is found within lookup table, else 0.
+
     """
     lbound = 0
     ubound = len(table) - 1
@@ -110,6 +113,7 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
     """Given one Unicode character, return its printable length on a terminal.
 
     Args:
+    ----
         wc: A single Unicode character.
         unicode_version: A Unicode version number, such as
             ``'6.0.0'``. A list of version levels suported by wcwidth
@@ -120,6 +124,7 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
             highest Unicode version level is used.
 
     Returns:
+    -------
         The width, in cells, necessary to display the character of
         Unicode string character, ``wc``.  Returns 0 if the ``wc`` argument has
         no printable effect on a terminal (such as NUL '\\0'), -1 if ``wc`` is
@@ -128,6 +133,7 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
         character occupies on a graphic terminal (1 or 2) is returned.
 
     See :ref:`Specification` for details of cell measurement.
+
     """
     # Ensure wc is a single character
     if not isinstance(wc, str) or len(wc) != 1:
@@ -163,6 +169,7 @@ def wcswidth(pwcs: str, n: int | None = None, unicode_version: str = "auto") -> 
     """Given a unicode string, return its printable length on a terminal.
 
     Args:
+    ----
         pwcs: Measure width of given unicode string.
         n: When ``n`` is None (default), return the length of the entire
             string, otherwise only the first ``n`` characters are measured. This
@@ -175,11 +182,13 @@ def wcswidth(pwcs: str, n: int | None = None, unicode_version: str = "auto") -> 
             available unicode version, otherwise.
 
     Returns:
+    -------
         The width, in cells, needed to display the first ``n`` characters
         of the unicode string ``pwcs``.  Returns ``-1`` for C0 and C1 control
         characters!
 
     See :ref:`Specification` for details of cell measurement.
+
     """
     if n is None:
         n = len(pwcs)
@@ -199,10 +208,13 @@ def _wcversion_value(ver_string: str) -> tuple[int, ...]:
     """Integer-mapped value of given dotted version string.
 
     Args:
+    ----
         ver_string: Unicode version string, of form ``n.n.n``.
 
     Returns:
+    -------
         Tuple of digit tuples, ``tuple(int, [...])``.
+
     """
     return tuple(map(int, ver_string.split(".")))
 
@@ -224,14 +236,17 @@ def _wcmatch_version(given_version: str) -> str:
     '4.1.0'
 
     Args:
+    ----
         given_version: Given version for compare, may be ``auto``
             (default), to select Unicode Version from Environment Variable,
             ``UNICODE_VERSION``. If the environment variable is not set, then the
             latest is used.
 
     Returns:
+    -------
         Unicode string, or non-unicode ``str`` type for python 2
         when given ``version`` is also type ``str``.
+
     """
     if given_version == "auto":
         given_version = os.environ.get("UNICODE_VERSION", "latest")
