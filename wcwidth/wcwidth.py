@@ -72,8 +72,13 @@ from .unicode_versions import list_versions
 try:
     from functools import lru_cache
 except ImportError:
+    # If this import fails, you may need to install the backports.functools_lru_cache package
     from backports.functools_lru_cache import lru_cache
 _PY3 = sys.version_info[0] >= 3
+
+# Type annotations for global variables
+WIDE_EASTASIAN: list[tuple[int, int]]
+VS16_NARROW_TO_WIDE: dict[int, int]
 
 
 def _bisearch(ucs: int, table: list[tuple[int, int]]) -> int:
