@@ -168,7 +168,7 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
 
     # Check for emoji sequences and ZWJ sequences
     if 0x1F000 <= ucs <= 0x1FFFF or ucs == 0x200D:
-        return 0  # ZWJ and emoji modifier characters have zero width
+        return 2  # Emoji characters have width 2
 
     # Check for wide East Asian characters
     if _bisearch(ucs, WIDE_EASTASIAN[unicode_version]):
@@ -224,7 +224,7 @@ def wcswidth(pwcs: str, n: int | None = None, unicode_version: str = "auto") -> 
         if 0x1F000 <= ord(char) <= 0x1FFFF:
             # Look ahead for ZWJ sequences
             j = i + 1
-            while j < n and (ord(pwcs[j]) == 0x200D or 0x1F000 <= ord(pwcs[j]) <= 0x1FFFF):
+            while j < n and (ord(pwcs[j]) == 0x200D or 0x1F000 <= ord(pwcs[j]) <= 0x1FFFF or 0xFE00 <= ord(pwcs[j]) <= 0xFE0F):
                 j += 1
             width += 2  # Count the entire emoji sequence as width 2
             i = j

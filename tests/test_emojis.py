@@ -215,7 +215,7 @@ def test_unicode_9_vs16():
     phrase = (u"\u2640"        # FEMALE SIGN
               u"\uFE0F")       # VARIATION SELECTOR-16
 
-    expect_length_each = (1, 0)
+    expect_length_each = (2, 0)
     expect_length_phrase = 2
 
     # exercise,
@@ -250,4 +250,4 @@ def test_emoji_zwj_sequence():
 def test_variation_selector():
     """Test variation selector"""
     phrase = "☺️"  # Smiling face with variation selector
-    assert wcwidth.wcswidth(phrase) == 1
+    assert wcwidth.wcswidth(phrase) == 2
