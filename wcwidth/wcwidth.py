@@ -296,7 +296,12 @@ def _wcmatch_version(given_version: str) -> str:
         return list_versions()[-1]
 
     supported_versions = list_versions()
-    given_value = _wcversion_value(given_version)
+    
+    try:
+        given_value = _wcversion_value(given_version)
+    except ValueError:
+        warnings.warn(f"Invalid Unicode version {given_version}, using latest")
+        return supported_versions[-1]
 
     for version in reversed(supported_versions):
         if _wcversion_value(version) <= given_value:
