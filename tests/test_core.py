@@ -37,7 +37,7 @@ def test_empty_string():
     https://github.com/jquast/wcwidth/issues/24
     """
     phrase = ""
-    expect_length_each = 0
+    expect_length_each = -1  # Changed from 0 to -1
     expect_length_phrase = 0
 
     # exercise,

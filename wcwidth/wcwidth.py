@@ -81,25 +81,29 @@ WIDE_EASTASIAN: list[tuple[int, int]]
 VS16_NARROW_TO_WIDE: dict[int, int]
 
 
-def _bisearch(ucs: int, table: list[tuple[int, int]]) -> int:
+def _bisearch(ucs: int, table: dict[str, list[tuple[int, int]]]) -> int:
     """Auxiliary function for binary search in interval table.
 
     Args:
     ----
         ucs: Ordinal value of unicode character.
-        table: List of starting and ending ranges of ordinal values,
-            in form of ``[(start, end), ...]``.
+        table: Dictionary of unicode versions to lists of starting and ending ranges
+            of ordinal values, in form of ``{'version': [(start, end), ...], ...}``.
 
     Returns:
     -------
         1 if ordinal value ucs is found within lookup table, else 0.
 
     """
-    lbound = 0
-    ubound = len(table) - 1
+    # Use the latest unicode version
+    latest_version = max(table.keys())
+    ranges = table[latest_version]
 
-    if ucs < table[0][0] or ucs > table[-1][1]:
+    if not ranges or ucs < ranges[0][0] or ucs > ranges[-1][1]:
         return 0
+
+    lbound = 0
+    ubound = len(ranges) - 1
 
     while ubound >= lbound:
         mid = (lbound + ubound) // 2
