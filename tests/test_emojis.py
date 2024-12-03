@@ -241,3 +241,13 @@ def test_unicode_8_vs16():
     # verify.
     assert length_each == expect_length_each
     assert length_phrase == expect_length_phrase
+
+def test_emoji_zwj_sequence():
+    """Test a complex emoji ZWJ sequence"""
+    phrase = "👨‍👩‍👧‍👦"  # Family emoji
+    assert wcwidth.wcswidth(phrase) == 2
+
+def test_variation_selector():
+    """Test variation selector"""
+    phrase = "☺️"  # Smiling face with variation selector
+    assert wcwidth.wcswidth(phrase) == 1
