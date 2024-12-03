@@ -154,12 +154,15 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
     if ucs < 32 or 0x07F <= ucs < 0x0A0:
         return -1
 
+    # Use the latest unicode version
+    latest_version = max(ZERO_WIDTH.keys())
+
     # Check for zero width characters
-    if _bisearch(ucs, ZERO_WIDTH):
+    if _bisearch(ucs, ZERO_WIDTH[latest_version]):
         return 0
 
     # Check for wide East Asian characters
-    if _bisearch(ucs, WIDE_EASTASIAN):
+    if _bisearch(ucs, WIDE_EASTASIAN[latest_version]):
         return 2
 
     # Check for variation selectors
