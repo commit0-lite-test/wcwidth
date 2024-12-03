@@ -306,9 +306,10 @@ def _wcmatch_version(given_version: str) -> str:
     for version in reversed(supported_versions):
         if _wcversion_value(version) <= given_value:
             if version != given_version:
-                warnings.warn(
-                    f"Unicode version {given_version} not found, using {version}"
-                )
+                if _wcversion_value(version) < given_value:
+                    warnings.warn(
+                        f"Unicode version {given_version} not found, using {version}"
+                    )
             return version
 
     # If no suitable version found, return the earliest supported version
