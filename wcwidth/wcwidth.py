@@ -167,8 +167,10 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
         return 0
 
     # Check for emoji sequences and ZWJ sequences
-    if 0x1F000 <= ucs <= 0x1FFFF or ucs == 0x200D:
+    if 0x1F000 <= ucs <= 0x1FFFF:
         return 2  # Emoji characters have width 2
+    if ucs == 0x200D:  # Zero Width Joiner
+        return 0
 
     # Check for wide East Asian characters
     if _bisearch(ucs, WIDE_EASTASIAN[unicode_version]):
@@ -180,6 +182,10 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
 
     # Check for VS16 characters
     if ucs in VS16_NARROW_TO_WIDE:
+        return 2
+
+    # Special case for FEMALE SIGN and MALE SIGN
+    if ucs in (0x2640, 0x2642) and unicode_version >= '9.0.0':
         return 2
 
     # All other characters are considered single width

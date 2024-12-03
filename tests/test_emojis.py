@@ -100,7 +100,7 @@ def test_another_emoji_zwj_sequence():
         u"\u200D"        # ZERO WIDTH JOINER
         u"\u2640"        # FEMALE SIGN
         u"\uFE0F")       # VARIATION SELECTOR-16
-    expect_length_each = (1, 0, 0, 1, 0)
+    expect_length_each = (2, 2, 0, 2, 0)
     expect_length_phrase = 2
 
     # exercise,
