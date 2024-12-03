@@ -108,7 +108,8 @@ def test_nearest_800_str():
     given, expected = '8', '8.0.0'
 
     # exercise
-    result = wcwidth._wcmatch_version(given)
+    with pytest.warns(UserWarning):
+        result = wcwidth._wcmatch_version(given)
 
     # verify.
     assert result == expected
@@ -120,7 +121,8 @@ def test_nearest_800_unicode():
     given, expected = u'8', u'8.0.0'
 
     # exercise
-    result = wcwidth._wcmatch_version(given)
+    with pytest.warns(UserWarning):
+        result = wcwidth._wcmatch_version(given)
 
     # verify.
     assert result == expected
@@ -132,7 +134,8 @@ def test_nearest_999_str():
     given, expected = '999.0', wcwidth.list_versions()[-1]
 
     # exercise
-    result = wcwidth._wcmatch_version(given)
+    with pytest.warns(UserWarning):
+        result = wcwidth._wcmatch_version(given)
 
     # verify.
     assert result == expected
@@ -144,7 +147,8 @@ def test_nearest_999_unicode():
     given, expected = u'999.0', wcwidth.list_versions()[-1]
 
     # exercise
-    result = wcwidth._wcmatch_version(given)
+    with pytest.warns(UserWarning):
+        result = wcwidth._wcmatch_version(given)
 
     # verify.
     assert result == expected
