@@ -145,6 +145,10 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
 
     ucs = ord(wc)
 
+    # NULL character
+    if ucs == 0:
+        return 0
+
     # C0/C1 control characters
     if ucs < 32 or 0x07F <= ucs < 0x0A0:
         return -1
