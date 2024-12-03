@@ -157,9 +157,18 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
     if unicode_version == "auto":
         unicode_version = max(ZERO_WIDTH.keys())
 
+    # Ensure unicode_version is a valid key
+    valid_versions = list(ZERO_WIDTH.keys())
+    if unicode_version not in valid_versions:
+        unicode_version = max(v for v in valid_versions if v <= unicode_version)
+
     # Check for zero width characters
     if _bisearch(ucs, ZERO_WIDTH[unicode_version]):
         return 0
+
+    # Check for emoji sequences
+    if 0x1F000 <= ucs <= 0x1FFFF:
+        return 2
 
     # Check for wide East Asian characters
     if _bisearch(ucs, WIDE_EASTASIAN[unicode_version]):
