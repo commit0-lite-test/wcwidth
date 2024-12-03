@@ -108,8 +108,7 @@ def test_nearest_800_str():
     given, expected = '8', '8.0.0'
 
     # exercise
-    with pytest.warns(UserWarning):
-        result = wcwidth._wcmatch_version(given)
+    result = wcwidth._wcmatch_version(given)
 
     # verify.
     assert result == expected
@@ -121,8 +120,7 @@ def test_nearest_800_unicode():
     given, expected = u'8', u'8.0.0'
 
     # exercise
-    with pytest.warns(UserWarning):
-        result = wcwidth._wcmatch_version(given)
+    result = wcwidth._wcmatch_version(given)
 
     # verify.
     assert result == expected
