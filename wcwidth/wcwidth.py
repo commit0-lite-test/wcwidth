@@ -81,29 +81,24 @@ WIDE_EASTASIAN: list[tuple[int, int]]
 VS16_NARROW_TO_WIDE: dict[int, int]
 
 
-def _bisearch(ucs: int, table: dict[str, list[tuple[int, int]]]) -> int:
+def _bisearch(ucs: int, table: list[tuple[int, int]]) -> int:
     """Auxiliary function for binary search in interval table.
 
     Args:
     ----
         ucs: Ordinal value of unicode character.
-        table: Dictionary of unicode versions to lists of starting and ending ranges
-            of ordinal values, in form of ``{'version': [(start, end), ...], ...}``.
+        table: List of starting and ending ranges of ordinal values.
 
     Returns:
     -------
         1 if ordinal value ucs is found within lookup table, else 0.
 
     """
-    # Use the latest unicode version
-    latest_version = max(table.keys())
-    ranges = table[latest_version]
-
-    if not ranges or ucs < ranges[0][0] or ucs > ranges[-1][1]:
+    if not table or ucs < table[0][0] or ucs > table[-1][1]:
         return 0
 
     lbound = 0
-    ubound = len(ranges) - 1
+    ubound = len(table) - 1
 
     while ubound >= lbound:
         mid = (lbound + ubound) // 2
@@ -129,7 +124,7 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
             is returned by :func:`list_versions`.
 
             Any version string may be specified without error -- the nearest
-            matching version is selected.  When ``latest`` (default), the
+            matching version is selected.  When ``auto`` (default), the
             highest Unicode version level is used.
 
     Returns:
@@ -154,15 +149,16 @@ def wcwidth(wc: str, unicode_version: str = "auto") -> int:
     if ucs < 32 or 0x07F <= ucs < 0x0A0:
         return -1
 
-    # Use the latest unicode version
-    latest_version = max(ZERO_WIDTH.keys())
+    # Use the latest unicode version if set to "auto"
+    if unicode_version == "auto":
+        unicode_version = max(ZERO_WIDTH.keys())
 
     # Check for zero width characters
-    if _bisearch(ucs, ZERO_WIDTH[latest_version]):
+    if _bisearch(ucs, ZERO_WIDTH[unicode_version]):
         return 0
 
     # Check for wide East Asian characters
-    if _bisearch(ucs, WIDE_EASTASIAN[latest_version]):
+    if _bisearch(ucs, WIDE_EASTASIAN[unicode_version]):
         return 2
 
     # Check for variation selectors
